@@ -1,3 +1,5 @@
+import java.util.Locale;
+
 /**
  * A program to carry on conversations with a human user.
  * This is the initial version that:  
@@ -31,16 +33,37 @@ public class Magpie
     public String getResponse(String statement)
     {
         String response = "";
-        if (statement.indexOf("no") >= 0)
+        if (findWord(statement,"no") >= 0)
         {
             response = "Why so negative?";
         }
-        else if (statement.indexOf("mother") >= 0
-                || statement.indexOf("father") >= 0
-                || statement.indexOf("sister") >= 0
-                || statement.indexOf("brother") >= 0)
+        else if (findWord(statement,"mother") >= 0
+                || findWord(statement,"father") >= 0
+                || findWord(statement,"sister") >= 0
+                || findWord(statement,"brother") >= 0)
         {
             response = "Tell me more about your family.";
+        }
+        else if (findWord(statement,"dog")>=0 || findWord(statement,"cat")>=0){
+            response = "Tell me more about your pets.";
+        }
+        else if (findWord(statement,"Nathan")>=0){
+            response = "I've heard he loves Romanian folk dancing.";
+        }
+        else if (findWord(statement,"baseball")>=0){
+            response = "I love baseball.";
+        }
+        else if (findWord(statement,"ice cream")>=0){
+            response = "My favorite ice cream flavor is strawberry cheesecake.";
+        }
+        else if (findWord(statement,"spanish")>=0){
+            response = "What a romantic language.";
+        }
+        else if ("".equals(statement.trim())){
+            response= "Say something please.";
+        }
+        else if (findWord(statement,"I want")>=0){
+            response = transformIWantStatement(statement);
         }
         else
         {
@@ -55,7 +78,7 @@ public class Magpie
      */
     public String getRandomResponse()
     {
-        final int NUMBER_OF_RESPONSES = 4;
+        final int NUMBER_OF_RESPONSES = 6;
         double r = Math.random();
         int whichResponse = (int)(r * NUMBER_OF_RESPONSES);
         String response = "";
@@ -76,6 +99,15 @@ public class Magpie
         {
             response = "You don't say.";
         }
+        else if (whichResponse == 4)
+        {
+            response = "Well shiver me timbers.";
+        }
+        else if (whichResponse == 5)
+        {
+            response = "By golly that's surprising!";
+        }
+
     
         return response;
     }
@@ -90,7 +122,33 @@ public class Magpie
     // The method returns the index of the first character in word
     // if it is found, and returns -1 otherwise. 
     public int findWord(String str, String word) {
+        word = word.toLowerCase();
+        str = str.toLowerCase();
+        int index = str.indexOf(word);
+        int maxIndex = str.length()-word.length();
+        if (index==maxIndex){
+            if (str.charAt(index-1)==' '){
+                return index;
+            }
+        }
+        else {
+            char after = str.charAt(index + word.length());
+            if (index > 0 && index < maxIndex) {
+
+                if (after == ' ' && str.charAt(index - 1) == ' ') {
+                    return index;
+                }
+            } else if (index == 0) {
+
+                if (after == ' ') {
+                    return index;
+                }
+
+            }
+
+        }
         return -1;
+
     }
 
     
@@ -104,8 +162,16 @@ public class Magpie
      */
     public String transformIWantStatement(String statement)
     {
-        //your code here
-        return "";
+        statement= statement.toLowerCase();
+        int index = findWord(statement,"i want") + 7;
+        int endIndex = statement.length();
+        for (int i =index; i<statement.length();i++){
+            if (statement.charAt(i)==' '){
+                endIndex=i+1;
+            }
+        }
+        String response = "Would you really be happy if you had " +statement.substring(index,endIndex) + "?";
+        return response;
     }
 
     /**
