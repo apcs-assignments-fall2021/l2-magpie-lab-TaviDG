@@ -20,7 +20,7 @@ public class Magpie
      */
     public String getGreeting()
     {
-        return "Hello, let's talk.";
+        return "Howdy! What's up?";
     }
     
     /**
@@ -62,8 +62,17 @@ public class Magpie
         else if ("".equals(statement.trim())){
             response= "Say something please.";
         }
+        else if (findWord(statement,"I want to")>=0){
+            response = transformIWantToStatement(statement);
+        }
         else if (findWord(statement,"I want")>=0){
             response = transformIWantStatement(statement);
+        }
+        else if (findWord(statement,"I")>=0 && findWord(statement,"you")>=0) {
+            response = transformIYouStatement(statement);
+        }
+        else if (findWord(statement,"Do you like")>=0) {
+            response = transformDoYouLikeStatement(statement);
         }
         else
         {
@@ -125,28 +134,31 @@ public class Magpie
         word = word.toLowerCase();
         str = str.toLowerCase();
         int index = str.indexOf(word);
-        int maxIndex = str.length()-word.length();
-        if (index==maxIndex){
-            if (str.charAt(index-1)==' '){
-                return index;
-            }
-        }
-        else {
-            char after = str.charAt(index + word.length());
-            if (index > 0 && index < maxIndex) {
-
-                if (after == ' ' && str.charAt(index - 1) == ' ') {
+        if (index !=-1){
+            int maxIndex = str.length()-word.length();
+            if (index==maxIndex){
+                if (str.charAt(index-1)==' '){
                     return index;
                 }
-            } else if (index == 0) {
+            }
+            else {
+                char after = str.charAt(index + word.length());
+                if (index > 0 && index < maxIndex) {
 
-                if (after == ' ') {
-                    return index;
+                    if (after == ' ' && str.charAt(index - 1) == ' ') {
+                        return index;
+                    }
+                } else if (index == 0) {
+
+                    if (after == ' ') {
+                        return index;
+                    }
+
                 }
 
             }
-
         }
+
         return -1;
 
     }
@@ -182,8 +194,17 @@ public class Magpie
      */
     public String transformIYouStatement(String statement)
     {
-        //your code here
-        return "";
+        statement= statement.toLowerCase();
+        int index = findWord(statement,"I") + 2;
+        int endIndex = statement.length();
+        for (int i =index; i<statement.length();i++){
+            if (statement.charAt(i)==' '){
+                endIndex=i+1;
+                break;
+            }
+        }
+        String response = "Why do you " +statement.substring(index,endIndex) + "me?";
+        return response;
     }
 
     /**
@@ -194,8 +215,16 @@ public class Magpie
      */
     public String transformIWantToStatement(String statement)
     {
-        // your code here
-        return "";
+        statement= statement.toLowerCase();
+        int index = findWord(statement,"to") + 3;
+//        int endIndex = statement.length();
+//        for (int i =index; i<statement.length();i++){
+//            if (statement.charAt(i)==' '){
+//                endIndex=i+1;
+//            }
+//        }
+        String response = "What would it mean to " +statement.substring(index) + "?";
+        return response;
     }
 
 
@@ -209,7 +238,30 @@ public class Magpie
      */
     public String transformYouMeStatement(String statement)
     {
-        // your code here
-        return "";
+        statement= statement.toLowerCase();
+        int index = findWord(statement,"you") + 4;
+        int endIndex = statement.length();
+        for (int i =index; i<statement.length();i++){
+            if (statement.charAt(i)==' '){
+                endIndex=i+1;
+                break;
+            }
+        }
+        String response = "What makes you think that I " +statement.substring(index,endIndex) + "you?";
+        return response;
+    }
+
+    public String transformDoYouLikeStatement(String statement){
+        statement= statement.toLowerCase();
+        int index = findWord(statement,"like") + 5;
+        int endIndex = statement.length();
+        for (int i =index; i<statement.length();i++){
+            if (statement.charAt(i)=='?'){
+                endIndex=i;
+                break;
+            }
+        }
+        String response = "No, I hate " +statement.substring(index,endIndex)+". I don't understand how anyone in their right mind would ever like " + statement.substring(index,endIndex) +"!";
+        return response;
     }
 }
