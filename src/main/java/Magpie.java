@@ -87,7 +87,7 @@ public class Magpie
      */
     public String getRandomResponse()
     {
-        final int NUMBER_OF_RESPONSES = 6;
+        final int NUMBER_OF_RESPONSES = 8;
         double r = Math.random();
         int whichResponse = (int)(r * NUMBER_OF_RESPONSES);
         String response = "";
@@ -115,6 +115,18 @@ public class Magpie
         else if (whichResponse == 5)
         {
             response = "By golly that's surprising!";
+        }
+        else if (whichResponse == 6)
+        {
+            response = "And they were roommates!";
+        }
+        else if (whichResponse == 7)
+        {
+            response = "I have no idea what that means, but to each their own!";
+        }
+        else if (whichResponse == 8)
+        {
+            response = "Can you speak up a little bit?";
         }
 
     
